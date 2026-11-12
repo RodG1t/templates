@@ -1,0 +1,8 @@
+# {{ app_name }} site
+
+Privacy notice and support pages in Spanish and English, generated from the `static-site` Copier template.
+
+- `site/` is the folder that gets deployed: plain HTML and CSS, no build step.
+- Every paragraph marked `TEMPLATE-SLOT-NOT-WRITTEN` is text this project must write. Deploys are refused while any marker remains in `site/`.
+- Check locally: `grep -rn TEMPLATE-SLOT-NOT-WRITTEN site/` (no output means ready).
+- Template updates: `copier update` (answers are in `.copier-answers.yml`; don't edit that file by hand).

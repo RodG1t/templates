@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aviso de privacidad · {{ app_name }}</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header><nav><a href="/">{{ app_name }}</a> · <a href="/en/privacy.html" lang="en">English</a></nav></header>
+  <main>
+    <h1>Aviso de privacidad de {{ app_name }}</h1>
+    <p>Última actualización: <time datetime="{{ privacy_updated }}">{{ privacy_updated }}</time></p>
+
+    <h2>Responsable</h2>
+    <p>{{ app_name }} es publicada por {{ developer_name }}. Contacto: <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+
+    <!-- Sustituye cada párrafo marcado con el texto propio de la app. Quita una sección solo si no aplica. -->
+    <h2>Qué datos recopila la app</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: qué recopila la app, o que no recopila nada.</p>
+
+    <h2>Para qué se usan los datos</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: finalidad de cada tipo de dato.</p>
+
+    <h2>Dónde se guardan los datos</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: en el dispositivo, en un servidor o en ambos; en qué país.</p>
+
+    <h2>Transferencias a terceros</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: servicios que reciben datos, o que ninguno los recibe.</p>
+
+    <h2>Conservación y eliminación</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: cuánto tiempo se guardan los datos y cómo los elimina el usuario.</p>
+
+    <h2>Tus derechos</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: derechos aplicables y cómo ejercerlos.</p>
+
+    <h2>Menores de edad</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: público de la app y política de edad.</p>
+
+    <h2>Cambios a este aviso</h2>
+    <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: cómo se informa a los usuarios de los cambios.</p>
+  </main>
+  <footer>© {{ developer_name }} · <a href="/es/support.html">Soporte</a></footer>
+</body>
+</html>

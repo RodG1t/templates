@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #5c5c5c;
+  --link: #0b57d0;
+  --slot-bg: #fff4ce;
+  --slot-fg: #5c4400;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #ececec;
+    --muted: #a8a8a8;
+    --link: #8ab4f8;
+    --slot-bg: #3d3200;
+    --slot-fg: #ffe08a;
+  }
+}
+
+body {
+  margin: 0 auto;
+  max-width: 42rem;
+  padding: 1.5rem 1rem 3rem;
+  background: var(--bg);
+  color: var(--fg);
+  font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+a { color: var(--link); }
+
+header nav, footer { color: var(--muted); font-size: 0.9rem; }
+footer { margin-top: 3rem; border-top: 1px solid currentColor; padding-top: 1rem; }
+
+/* Unwritten content: deploys are refused while any slot remains. */
+.slot {
+  background: var(--slot-bg);
+  color: var(--slot-fg);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,46 @@
+# One repo, several templates: the `template` answer picks the subfolder.
+# No _tasks, migrations or Jinja extensions, so no --trust is needed.
+_subdirectory: "{{ template }}"
+_answers_file: .copier-answers.yml
+_min_copier_version: "9.19.1"
+
+template:
+  type: str
+  help: Which template to generate
+  choices:
+    - static-site
+
+app_name:
+  type: str
+  help: App name, shown on every page
+  when: "{{ template == 'static-site' }}"
+  validator: "{% if not app_name.strip() %}Required{% endif %}"
+
+developer_name:
+  type: str
+  help: Developer or legal name, shown as the party responsible for the app
+  when: "{{ template == 'static-site' }}"
+  validator: "{% if not developer_name.strip() %}Required{% endif %}"
+
+support_email:
+  type: str
+  help: Support email address, shown on the support and privacy pages
+  when: "{{ template == 'static-site' }}"
+  validator: >-
+    {% if not (support_email | regex_search('^[^@\s]+@[^@\s]+\.[^@\s]+$')) %}Not an email address{% endif %}
+
+privacy_updated:
+  type: str
+  help: Privacy notice last-updated date (YYYY-MM-DD)
+  when: "{{ template == 'static-site' }}"
+  validator: >-
+    {% if not (privacy_updated | regex_search('^\d{4}-\d{2}-\d{2}$')) %}Use YYYY-MM-DD{% endif %}
+
+default_language:
+  type: str
+  help: Default language, listed first on the root page
+  when: "{{ template == 'static-site' }}"
+  choices:
+    - es
+    - en
+  default: es

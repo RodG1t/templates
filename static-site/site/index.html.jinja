@@ -1,0 +1,25 @@
+{%- set langs = ['es', 'en'] if default_language == 'es' else ['en', 'es'] -%}
+{%- set names = {'es': 'Español', 'en': 'English'} -%}
+{%- set privacy = {'es': 'Aviso de privacidad', 'en': 'Privacy notice'} -%}
+{%- set support = {'es': 'Soporte', 'en': 'Support'} -%}
+<!doctype html>
+<html lang="{{ default_language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ app_name }}</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>{{ app_name }}</h1>
+{%- for l in langs %}
+  <section lang="{{ l }}">
+    <h2>{{ names[l] }}</h2>
+    <ul>
+      <li><a href="/{{ l }}/privacy.html">{{ privacy[l] }}</a></li>
+      <li><a href="/{{ l }}/support.html">{{ support[l] }}</a></li>
+    </ul>
+  </section>
+{%- endfor %}
+</body>
+</html>

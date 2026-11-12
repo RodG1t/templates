@@ -21,6 +21,7 @@ Copier asks which template to use. Update a generated project with `copier updat
 | Workflow | Does | Caller supplies |
 |---|---|---|
 | `pages-deploy.yml` | Refuses unwritten template slots, then deploys a folder to Cloudflare Pages (wrangler-action v4.1.3, Wrangler 4.155.0) | inputs `project_name`, `directory`; secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
+| `ci-node.yml` | Gitleaks 8.30.1 (checksum-verified binary) over the full history; `npm ci`, `npm run typecheck`, `npm run lint`, `npm test` | input `node_version`; scripts `typecheck`, `lint`, `test`; committed `package-lock.json` |
 
 Every action is pinned to a full commit SHA.
 

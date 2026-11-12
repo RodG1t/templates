@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Support · {{ app_name }}</title>
+  <title>Support · {{ app_name | e }}</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header><nav><a href="/">{{ app_name }}</a> · <a href="/es/support.html" lang="es">Español</a></nav></header>
+  <header><nav><a href="/">{{ app_name | e }}</a> · <a href="/es/support.html" lang="es">Español</a></nav></header>
   <main>
-    <h1>{{ app_name }} support</h1>
+    <h1>{{ app_name | e }} support</h1>
 
     <h2>Contact</h2>
-    <p>Email <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+    <p>Email <a href="mailto:{{ support_email | e }}">{{ support_email | e }}</a>.</p>
     <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: expected response time and what to include in a message.</p>
 
     <h2>Frequently asked questions</h2>
     <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: common questions and answers, or remove this section.</p>
   </main>
-  <footer>© {{ developer_name }} · <a href="/en/privacy.html">Privacy notice</a></footer>
+  <footer>© {{ developer_name | e }} · <a href="/en/privacy.html">Privacy notice</a></footer>
 </body>
 </html>

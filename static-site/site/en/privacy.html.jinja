@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy notice · {{ app_name }}</title>
+  <title>Privacy notice · {{ app_name | e }}</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header><nav><a href="/">{{ app_name }}</a> · <a href="/es/privacy.html" lang="es">Español</a></nav></header>
+  <header><nav><a href="/">{{ app_name | e }}</a> · <a href="/es/privacy.html" lang="es">Español</a></nav></header>
   <main>
-    <h1>{{ app_name }} privacy notice</h1>
+    <h1>{{ app_name | e }} privacy notice</h1>
     <p>Last updated: <time datetime="{{ privacy_updated }}">{{ privacy_updated }}</time></p>
 
     <h2>Who is responsible</h2>
-    <p>{{ app_name }} is published by {{ developer_name }}. Contact: <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+    <p>{{ app_name | e }} is published by {{ developer_name | e }}. Contact: <a href="mailto:{{ support_email | e }}">{{ support_email | e }}</a>.</p>
 
     <!-- Replace each slot paragraph with the app's own text. Remove a section only if it does not apply. -->
     <h2>What data the app collects</h2>
@@ -40,6 +40,6 @@
     <h2>Changes to this notice</h2>
     <p class="slot">TEMPLATE-SLOT-NOT-WRITTEN: how users learn about changes.</p>
   </main>
-  <footer>© {{ developer_name }} · <a href="/en/support.html">Support</a></footer>
+  <footer>© {{ developer_name | e }} · <a href="/en/support.html">Support</a></footer>
 </body>
 </html>

@@ -7,11 +7,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ app_name }}</title>
+  <title>{{ app_name | e }}</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>{{ app_name }}</h1>
+  <h1>{{ app_name | e }}</h1>
 {%- for l in langs %}
   <section lang="{{ l }}">
     <h2>{{ names[l] }}</h2>

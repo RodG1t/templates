@@ -41,7 +41,12 @@ jobs:
     with:
       tofu_zip_sha256: <sha256 of tofu_<version>_linux_amd64.zip>
       apply: ${{ github.event_name == 'workflow_dispatch' && inputs.apply }}
-    secrets: inherit
+    secrets:
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+      STATE_PASSPHRASE: ${{ secrets.STATE_PASSPHRASE }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 ```
 
 Every action is pinned to a full commit SHA.

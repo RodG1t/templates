@@ -6,7 +6,8 @@ Copier templates and reusable GitHub Actions workflows for the owner's projects.
 
 | Template | What it generates |
 |---|---|
-| `static-site` | Privacy notice and support pages, Spanish and English, plain HTML |
+| `static-site` | Privacy notice and support pages, Spanish and English, plain HTML, with a Cloudflare Pages deploy caller |
+| `expo-eas` | Into an existing Expo app: `eas.json` (development, preview, production; remote app versions; IDs-free Android submit) and a CI caller for `ci-node` |
 
 Generate (Copier 9.19.1 or later; no `--trust` needed):
 

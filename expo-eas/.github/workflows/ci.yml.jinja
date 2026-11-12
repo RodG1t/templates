@@ -1,0 +1,17 @@
+# Runs on pull requests and pushes to main.
+# Pinned to the templates commit this project was generated from; `copier update` moves the pin.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: RodG1t/templates/.github/workflows/ci-node.yml@{{ _copier_conf.vcs_ref_hash }}
+    with:
+      node_version: "{{ node_version }}"

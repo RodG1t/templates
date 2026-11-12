@@ -9,6 +9,14 @@ template:
   help: Which template to generate
   choices:
     - static-site
+    - expo-eas
+
+node_version:
+  type: str
+  help: Exact Node.js version for CI (e.g. 22.11.0)
+  when: "{{ template == 'expo-eas' }}"
+  validator: >-
+    {% if not (node_version | regex_search('^\d+\.\d+\.\d+$')) %}Use an exact version like 22.11.0{% endif %}
 
 app_name:
   type: str

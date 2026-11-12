@@ -1,0 +1,88 @@
+# OpenTofu plan, and apply only when the caller asks for it on main.
+# The plan goes to the job summary. With apply: true, the same saved plan is applied.
+# One run at a time per repository; no run is cancelled mid-way.
+name: tofu-plan-apply
+
+on:
+  workflow_call:
+    inputs:
+      apply:
+        description: Apply the plan (honoured only on main)
+        type: boolean
+        default: false
+      tofu_zip_sha256:
+        description: SHA-256 of tofu_<version>_linux_amd64.zip for the version in .opentofu-version
+        type: string
+        required: true
+      working_directory:
+        description: Folder holding the root module and .opentofu-version
+        type: string
+        default: "."
+    secrets:
+      R2_ACCESS_KEY_ID:
+        required: true
+      R2_SECRET_ACCESS_KEY:
+        required: true
+      R2_ENDPOINT_URL:
+        description: R2 S3 endpoint, without the bucket
+        required: true
+      STATE_PASSPHRASE:
+        required: true
+      CLOUDFLARE_API_TOKEN:
+        description: For the cloudflare provider, once the root module uses it
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  tofu:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: tofu-${{ github.repository }}
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.R2_ENDPOINT_URL }}
+      TF_VAR_state_passphrase: ${{ secrets.STATE_PASSPHRASE }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_IN_AUTOMATION: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
+        with:
+          tofu_version_file: ${{ inputs.working_directory }}/.opentofu-version
+          checksums: ${{ inputs.tofu_zip_sha256 }}
+          tofu_wrapper: false
+
+      - name: Format check
+        run: tofu fmt -check -recursive
+
+      - name: Init
+        run: tofu init -input=false -lockfile=readonly
+
+      - name: Validate
+        run: tofu validate -no-color
+
+      - name: Plan
+        run: |
+          set -o pipefail
+          tofu plan -input=false -lock-timeout=5m -no-color -out=tfplan | tee plan.txt
+          {
+            echo "### tofu plan (${GITHUB_REF_NAME})"
+            echo '```text'
+            tail -c 900000 plan.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Apply
+        if: inputs.apply && github.ref == 'refs/heads/main'
+        run: tofu apply -input=false -lock-timeout=5m -no-color tfplan

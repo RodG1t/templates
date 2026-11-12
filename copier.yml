@@ -36,6 +36,13 @@ privacy_updated:
   validator: >-
     {% if not (privacy_updated | regex_search('^\d{4}-\d{2}-\d{2}$')) %}Use YYYY-MM-DD{% endif %}
 
+pages_project:
+  type: str
+  help: Cloudflare Pages project name (created in infra-live; lowercase letters, digits, hyphens)
+  when: "{{ template == 'static-site' }}"
+  validator: >-
+    {% if not (pages_project | regex_search('^[a-z0-9-]+$')) %}Use lowercase letters, digits and hyphens{% endif %}
+
 default_language:
   type: str
   help: Default language, listed first on the root page

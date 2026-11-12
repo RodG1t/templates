@@ -1,0 +1,75 @@
+# Deploys a static folder to Cloudflare Pages.
+# Refuses to deploy while any TEMPLATE-SLOT-NOT-WRITTEN marker remains.
+# The Pages project itself is created in infra-live, not here.
+name: pages-deploy
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        description: Cloudflare Pages project name
+        type: string
+        required: true
+      directory:
+        description: Folder to deploy, relative to the repo root
+        type: string
+        default: site
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+    outputs:
+      deployment_url:
+        description: URL of this deployment
+        value: ${{ jobs.deploy.outputs.deployment_url }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: pages-deploy-${{ inputs.project_name }}-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
+    outputs:
+      deployment_url: ${{ steps.deploy.outputs.deployment-url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Refuse unwritten slots
+        env:
+          DIR: ${{ inputs.directory }}
+        run: |
+          if grep -rn --include='*.html' TEMPLATE-SLOT-NOT-WRITTEN -- "$DIR"; then
+            echo "::error::Unwritten template slots remain in $DIR (listed above)."
+            exit 1
+          fi
+
+      - name: Check inputs and branch
+        id: args
+        env:
+          DIR: ${{ inputs.directory }}
+          PROJECT: ${{ inputs.project_name }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          # Values reach wrangler's command line, so allow only safe characters.
+          [[ "$PROJECT" =~ ^[a-z0-9-]+$ ]] || { echo "::error::Bad project_name"; exit 1; }
+          [[ "$DIR" =~ ^[A-Za-z0-9._/-]+$ && "$DIR" != *..* ]] || { echo "::error::Bad directory"; exit 1; }
+          [[ -d "$DIR" ]] || { echo "::error::$DIR not found"; exit 1; }
+          branch=$(printf '%s' "$BRANCH" | tr -c 'A-Za-z0-9-' '-')
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.155.0"
+          packageManager: npm
+          command: pages deploy ${{ inputs.directory }} --project-name=${{ inputs.project_name }} --branch=${{ steps.args.outputs.branch }}

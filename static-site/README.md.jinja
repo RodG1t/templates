@@ -5,4 +5,5 @@ Privacy notice and support pages in Spanish and English, generated from the `sta
 - `site/` is the folder that gets deployed: plain HTML and CSS, no build step.
 - Every paragraph marked `TEMPLATE-SLOT-NOT-WRITTEN` is text this project must write. Deploys are refused while any marker remains in `site/`.
 - Check locally: `grep -rn TEMPLATE-SLOT-NOT-WRITTEN site/` (no output means ready).
+- `.github/workflows/deploy.yml` deploys pull requests as previews and `main` to production on Cloudflare Pages project `{{ pages_project }}`. It needs repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 - Template updates: `copier update` (answers are in `.copier-answers.yml`; don't edit that file by hand).

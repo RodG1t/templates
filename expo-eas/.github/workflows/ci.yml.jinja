@@ -11,6 +11,9 @@ permissions:
   contents: read
 
 jobs:
+  gitleaks:
+    uses: RodG1t/templates/.github/workflows/gitleaks.yml@{{ _copier_conf.vcs_ref_hash }}
+
   ci:
     uses: RodG1t/templates/.github/workflows/ci-node.yml@{{ _copier_conf.vcs_ref_hash }}
     with:

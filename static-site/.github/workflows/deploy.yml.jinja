@@ -1,4 +1,4 @@
-# Pull requests deploy a preview; pushes to main deploy production.
+# Gitleaks first; then pull requests deploy a preview and pushes to main deploy production.
 # Pinned to the templates commit this site was generated from; `copier update` moves the pin.
 # Needs repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
 name: deploy
@@ -12,7 +12,11 @@ permissions:
   contents: read
 
 jobs:
+  gitleaks:
+    uses: RodG1t/templates/.github/workflows/gitleaks.yml@{{ _copier_conf.vcs_ref_hash }}
+
   pages:
+    needs: gitleaks
     uses: RodG1t/templates/.github/workflows/pages-deploy.yml@{{ _copier_conf.vcs_ref_hash }}
     with:
       project_name: "{{ pages_project }}"

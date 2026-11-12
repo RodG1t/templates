@@ -1,6 +1,7 @@
 # OpenTofu plan, and apply only when the caller asks for it on main.
 # The plan goes to the job summary. With apply: true, the same saved plan is applied.
-# One run at a time per repository; no run is cancelled mid-way.
+# One run at a time per repository; no run is cancelled mid-way, and with
+# queue: max a waiting run is not replaced by a newer one (GitHub's default would).
 name: tofu-plan-apply
 
 on:
@@ -42,6 +43,7 @@ jobs:
     concurrency:
       group: tofu-${{ github.repository }}
       cancel-in-progress: false
+      queue: max
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}

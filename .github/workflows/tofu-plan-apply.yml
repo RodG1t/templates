@@ -32,6 +32,9 @@ on:
       CLOUDFLARE_API_TOKEN:
         description: For the cloudflare provider, once the root module uses it
         required: false
+      CLOUDFLARE_ACCOUNT_ID:
+        description: Exported as TF_VAR_cloudflare_account_id only when set (32 lowercase hex)
+        required: false
 
 permissions:
   contents: read
@@ -58,6 +61,18 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # Exported only when set: an empty TF_VAR_ would override a variable's default.
+      - name: Cloudflare account ID
+        env:
+          ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          [ -n "$ACCOUNT_ID" ] || exit 0
+          case "$ACCOUNT_ID" in
+            *[!0-9a-f]*) echo "::error::CLOUDFLARE_ACCOUNT_ID must be lowercase hex"; exit 1 ;;
+          esac
+          [ "${#ACCOUNT_ID}" -eq 32 ] || { echo "::error::CLOUDFLARE_ACCOUNT_ID must be 32 characters"; exit 1; }
+          echo "TF_VAR_cloudflare_account_id=$ACCOUNT_ID" >> "$GITHUB_ENV"
 
       - uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
         with:

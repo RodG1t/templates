@@ -24,7 +24,7 @@ Copier asks which template to use. Update a generated project with `copier updat
 | `pages-deploy.yml` | Refuses unwritten template slots, then deploys a folder to Cloudflare Pages (wrangler-action v4.1.3, Wrangler 4.155.0) | inputs `project_name`, `directory`; secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
 | `gitleaks.yml` | Gitleaks 8.30.1 (checksum-verified release binary, no third-party action) over the full history. Every repo calls it as its own job | nothing |
 | `ci-node.yml` | `npm ci`, `npm run typecheck`, `npm run lint`, `npm test` | input `node_version`; scripts `typecheck`, `lint`, `test`; committed `package-lock.json` |
-| `tofu-plan-apply.yml` | OpenTofu from `.opentofu-version` (zip hash checked), `fmt -check`, `init -lockfile=readonly`, `validate`, plan to the job summary; applies that saved plan only with `apply: true` on `main`. One run at a time per repo; waiting runs queue in order (`queue: max`) | inputs `tofu_zip_sha256`, `apply`, `working_directory`; secrets `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT_URL`, `STATE_PASSPHRASE`, optional `CLOUDFLARE_API_TOKEN` |
+| `tofu-plan-apply.yml` | OpenTofu from `.opentofu-version` (zip hash checked), `fmt -check`, `init -lockfile=readonly`, `validate`, plan to the job summary; applies that saved plan only with `apply: true` on `main`. One run at a time per repo; waiting runs queue in order (`queue: max`) | inputs `tofu_zip_sha256`, `apply`, `working_directory`; secrets `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT_URL`, `STATE_PASSPHRASE`, optional `CLOUDFLARE_API_TOKEN`, optional `CLOUDFLARE_ACCOUNT_ID` (exported as `TF_VAR_cloudflare_account_id` only when set) |
 
 A caller for `tofu-plan-apply` plans on pull requests and pushes to `main`, and applies only from a manual run:
 
@@ -51,7 +51,10 @@ jobs:
       R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
       STATE_PASSPHRASE: ${{ secrets.STATE_PASSPHRASE }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 ```
+
+`CLOUDFLARE_ACCOUNT_ID` is for root modules that declare `variable "cloudflare_account_id"`; leave it out otherwise.
 
 Every action is pinned to a full commit SHA.
 
